@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
 import { BookCard } from '../components/BookCard'
+import { Header } from '../components/Header'
+
+const Container = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+`
+
 
 export const HomePage = () => {
-
     const [books, setBooks] = useState()
     const [author, setAuthor] = useState()
     const [page, setPage] = useState(1)
     const [order, setOrder] = useState('default')
     useEffect(() => {
-
         fetch(`https://bardolphs-books.herokuapp.com/books?order=${order}&page=${page}`)
             .then((res) => res.json())
             .then((json) => {
                 setBooks(json)
                 console.log(json)
             })
-
     }, [page, order])
 
     const getAuthors = (e) => {
@@ -34,27 +42,16 @@ export const HomePage = () => {
     }
 
     return (
-        <div className="App">
-            <header className="App-header">
+        <Container className="App">
+            <Header changeOrder={changeOrder} page={page} setPage={setPage} getAuthors={getAuthors} setAuthor={setAuthor}
+                author={author} />
 
-                <select onChange={(e) => changeOrder(e.target.value)}>
-                    <option value="default">Sort by</option>
-                    <option value='highest'>Highest rated</option>
-                    <option value='lowest'>Lowest rated</option>
-                    <option value='longest'>Longest</option>
-                    <option value='shortest'>Shortest</option>
-                </select>
 
-                {books && books.map((book) => {
-                    return <BookCard {...book} />
-                })}
 
-                {page > 1 && <button onClick={() => setPage(page - 1)}>Back</button>}
-                <button onClick={() => setPage(page + 1)}>Next Page</button>
-                <form onSubmit={(e) => getAuthors(e)}>
-                    <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)}></input>
-                </form>
-            </header>
-        </div>
+            {books && books.map((book) => {
+                return <BookCard {...book} />
+            })}
+
+        </Container>
     );
 }

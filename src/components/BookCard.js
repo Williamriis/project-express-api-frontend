@@ -4,16 +4,68 @@ import { Link } from 'react-router-dom'
 
 const CardContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  align-items: center;
   width: 80%; 
+  border-bottom: 1px solid grey;
+`
+const ImageWrapper = styled.div`
+  position: relative;
+`
+const InfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
 `
 const Image = styled.img`
   width: 70px;
   heigth: 200px;
+  ${ImageWrapper}:hover & {
+      filter: brightness(20%)
+  }
+`
+const ImageText = styled.button`
+  position: absolute;
+  border: none;
+  font-size: 15px;
+  background-color: transparent;
+  top: 20%;
+  color: white;
+  display: none;
+  ${ImageWrapper}:hover & {
+      display: block;
+  }
+`
+
+const RatingsInfoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const StarsContainer = styled.div`
+ width: 100px;
+ height: 30px;
+ display: flex;
+ position: relative;
+ align-items: center;
+`
+const StarsFilling = styled.div`
+  height: 30px;
+  background-color: red;
+  width: ${props => props.width}%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  z-index: -1
+  
+`
+const Stars = styled.img`
+  width: 100%;
+  position: absolute;
+  z-index: -2;
 `
 
 export const BookCard = ({ ...book }) => {
     const author = book.authors.split('-')[0].replace(' ', '_')
+    const [showTextField, setShowTextField] = useState(false)
     const [imgUrl, setImgUrl] = useState()
 
 
@@ -29,20 +81,32 @@ export const BookCard = ({ ...book }) => {
         })
             .then((res) => res.json())
             .then((json) => console.log(json))
+        setShowTextField(false)
     }
     return (
         <CardContainer>
-            {!book.image_url && <Image src="" />}
-            {book.image_url && <Image src={book.image_url} />}
-            <p>{book.title}</p>
-            <Link to={`/authors/${author}`}>{author}</Link>
-            <p>{book.average_rating} avg rating from {book.ratings_count} ratings</p>
-            <form onSubmit={(e) => addImage(e)}>
-                <input placeholder="add image url" onChange={(e) => setImgUrl(e.target.value)}></input>
-                <button type="submit">Click</button>
-            </form>
+            <ImageWrapper>
+                {!book.image_url && <Image src={require('../Default-cover.png')} />}
+                {book.image_url && <Image src={book.image_url} />}
+                <ImageText onClick={() => setShowTextField(!showTextField)}>Update Image</ImageText>
+            </ImageWrapper>
+            <InfoWrapper>
+                <p>{book.title}</p>
+                <div>by <Link to={`/authors/${author}`}>{author}</Link></div>
+                <RatingsInfoWrapper>
+                    <StarsContainer>
+                        <StarsFilling width={(book.average_rating / 5) * 100}>
+                            <Stars src={require('../stars.png')} />
+                        </StarsFilling>
+                    </StarsContainer>
+                    <p>{book.average_rating} avg rating from {book.ratings_count} ratings</p>
+                    {showTextField && <form onSubmit={(e) => addImage(e)}>
+                        <input type="url" placeholder="add image url" onChange={(e) => setImgUrl(e.target.value)}></input>
+                        <button type="submit">Click</button>
+                    </form>}
+                </RatingsInfoWrapper>
 
-
+            </InfoWrapper>
         </CardContainer>
     )
 }
