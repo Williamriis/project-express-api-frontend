@@ -1,30 +1,36 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import styled from 'styled-components'
+import { useParams } from 'react-router-dom'
 import { BookCard } from '../components/BookCard'
 
+const Container = styled.div`
+margin-top: 150px;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+`
 
-export const AuthorPage = () => {
+export const AuthorPage = ({ setLocation }) => {
     const params = useParams()
-    const history = useHistory()
     const [booksList, setBooksList] = useState()
-
     useEffect(() => {
         fetch(`https://bardolphs-books.herokuapp.com/authors/${params.author}`)
             .then((res) => res.json())
             .then((json) => {
                 setBooksList(json)
-                console.log(params)
+                setLocation('author')
             })
     }, [])
 
     return (
-        <div className="App">
-            <button onClick={() => history.push('/')}>Back</button>
+        <Container>
             {booksList && booksList.map((book) => {
                 return <BookCard {...book} />
             })}
 
-        </div>
+        </Container>
 
     )
 

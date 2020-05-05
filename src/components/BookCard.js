@@ -105,7 +105,7 @@ export const BookCard = ({ ...book }) => {
                 <ImageText onClick={() => setShowTextField(!showTextField)}>Update Image</ImageText>
             </ImageWrapper>
             <InfoWrapper>
-                <BookTitle>{book.title}</BookTitle>
+                <Link style={{ color: 'black', textDecoration: 'none' }} to={`/books/${book.bookID}`}><BookTitle>{book.title}</BookTitle></Link>
                 <span>by <Link style={{ color: 'black' }} to={`/authors/${author}`}>{author}</Link></span>
                 <RatingsInfoWrapper>
                     <StarsContainer>
