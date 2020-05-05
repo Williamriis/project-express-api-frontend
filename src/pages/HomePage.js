@@ -12,22 +12,22 @@ const Container = styled.div`
   box-sizing: border-box;
 `
 
-export const HomePage = ({ order, changeOrder, page, setPage, setBooks, books }) => {
+export const HomePage = ({ order, changeOrder, page, setPage, setBooks, books, keyword, setKeyword }) => {
 
     useEffect(() => {
-        fetch(`https://bardolphs-books.herokuapp.com/books?order=${order}&page=${page}`)
+        fetch(`https://bardolphs-books.herokuapp.com/books?order=${order}${keyword}&page=${page}`)
             .then((res) => res.json())
             .then((json) => {
                 setBooks(json)
                 console.log(json)
             })
-    }, [page, order])
+    }, [page, order, keyword])
 
     return (
         <Container>
             <NavBar changeOrder={changeOrder} order={order} page={page} setPage={setPage} />
             {books && books.map((book) => {
-                return <BookCard {...book} />
+                return <BookCard {...book} setKeyword={setKeyword} />
             })}
         </Container>
     );

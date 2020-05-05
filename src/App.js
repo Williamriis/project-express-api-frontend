@@ -8,19 +8,20 @@ import { NavBar } from './components/NavBar'
 
 export const App = () => {
   const [books, setBooks] = useState()
-  const [author, setAuthor] = useState()
+  const [keyword, setKeyword] = useState('')
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState('default')
   const [location, setLocation] = useState('/')
 
   const getAuthors = (e) => {
     e.preventDefault()
-    const formatted = author.replace(' ', '_')
-    fetch(`https://bardolphs-books.herokuapp.com/authors/${formatted}`)
-      .then((res) => res.json())
-      .then((json) => {
-        setBooks(json)
-      })
+    setKeyword(`&keyword=${e.target.value}`)
+    // const formattedKeyword = keyword.replace(' ', '_')
+    // fetch(`https://bardolphs-books.herokuapp.com/books/search/?keyword=${keyword}`)
+    //   .then((res) => res.json())
+    //   .then((json) => {
+    //     setBooks(json)
+    //   })
   }
 
   const changeOrder = (e) => {
@@ -31,10 +32,13 @@ export const App = () => {
 
   return (
     <BrowserRouter>
-      <Header author={author} setAuthor={setAuthor} getAuthors={getAuthors} setBooks={setBooks} setPage={setPage} location={location} setLocation={setLocation} />
+      <Header keyword={keyword} setKeyword={setKeyword} getAuthors={getAuthors} setBooks={setBooks}
+        setPage={setPage} location={location} setLocation={setLocation}
+        setORder={setOrder} />
       <Switch>
         <Route path="/" exact>
-          <HomePage order={order} changeOrder={changeOrder} setBooks={setBooks} books={books} page={page} setPage={setPage} />
+          <HomePage keyword={keyword} order={order} changeOrder={changeOrder} setBooks={setBooks}
+            books={books} page={page} setPage={setPage} setKeyword={setKeyword} />
         </Route>
       </Switch>
       <Switch>

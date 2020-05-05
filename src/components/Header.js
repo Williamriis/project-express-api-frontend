@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -40,9 +40,9 @@ const SearchBar = styled.input`
 
 
 
-export const Header = ({ getAuthors, setAuthor, author, setBooks, setPage, location, setLocation }) => {
+export const Header = ({ setKeyword, keyword, setBooks, setPage, location, setLocation }) => {
   const history = useHistory()
-
+  const [search, setSearch] = useState()
 
   const reset = () => {
     history.push('/')
@@ -52,14 +52,23 @@ export const Header = ({ getAuthors, setAuthor, author, setBooks, setPage, locat
       .then((json) => {
         setBooks(json)
         setLocation('/')
+        setKeyword('')
+
       })
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setKeyword(`&keyword=${search}`)
+    setSearch('')
+
   }
   return (
     <Container>
       <Button onClick={() => reset()}><Title>BARDOLPH'S <br></br> BOOK NOOK</Title></Button>
-      <Form onSubmit={(e) => getAuthors(e)}>
-        <SearchBar disabled={location !== "/"} type="text" value={author} onChange={(e) => setAuthor(e.target.value)}
-          placeholder="Search for an author" />
+      <Form onSubmit={(e) => handleSubmit(e)}>
+        <SearchBar disabled={location !== "/"} type="text"
+          placeholder="Search for an author" onChange={(e) => setSearch(e.target.value)} value={search} />
         <Button disabled={location !== "/"} type="submit"><FontAwesomeIcon icon={faSearch} /></Button>
       </Form>
       <div></div>

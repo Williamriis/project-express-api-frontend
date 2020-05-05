@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
+
 const CardContainer = styled.div`
   display: flex;
   align-items: center;
@@ -77,50 +78,58 @@ const Stars = styled.img`
   z-index: -2;
 `
 
-export const BookCard = ({ ...book }) => {
-    const author = book.authors.split('-')[0].replace(' ', '_')
-    const [showTextField, setShowTextField] = useState(false)
-    const [imgUrl, setImgUrl] = useState()
+const AuthorButton = styled.button`
+  border: none;
+  background: transparent;
+  text-decoration: underline;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+`
+
+export const BookCard = ({ setKeyword, ...book }) => {
+  const author = book.authors.split('-')[0].replace(' ', '_')
+  const [showTextField, setShowTextField] = useState(false)
+  const [imgUrl, setImgUrl] = useState()
 
 
-    const addImage = (e) => {
-        e.preventDefault()
-        fetch(`https://bardolphs-books.herokuapp.com/books/${book.bookID}`, {
-            method: "PUT",
-            mode: 'cors',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({ image_url: imgUrl })
-        })
-            .then((res) => res.json())
-            .then((json) => console.log(json))
-        setShowTextField(false)
-    }
-    return (
-        <CardContainer>
-            <ImageWrapper>
-                {!book.image_url && <Image src={require('../Default-cover.png')} />}
-                {book.image_url && <Image src={book.image_url} />}
-                <ImageText onClick={() => setShowTextField(!showTextField)}>Update Image</ImageText>
-            </ImageWrapper>
-            <InfoWrapper>
-                <Link style={{ color: 'black', textDecoration: 'none' }} to={`/books/${book.bookID}`}><BookTitle>{book.title}</BookTitle></Link>
-                <span>by <Link style={{ color: 'black' }} to={`/authors/${author}`}>{author}</Link></span>
-                <RatingsInfoWrapper>
-                    <StarsContainer>
-                        <StarsFilling width={(book.average_rating / 5) * 100}>
-                            <Stars src={require('../stars.png')} />
-                        </StarsFilling>
-                    </StarsContainer>
-                    <p>{book.average_rating} avg rating from {book.ratings_count} ratings</p>
-                    {showTextField && <form onSubmit={(e) => addImage(e)}>
-                        <input type="url" placeholder="Add image url" onChange={(e) => setImgUrl(e.target.value)}></input>
-                        <button type="submit">Upload</button>
-                    </form>}
-                </RatingsInfoWrapper>
+  const addImage = (e) => {
+    e.preventDefault()
+    fetch(`https://bardolphs-books.herokuapp.com/books/${book.bookID}`, {
+      method: "PUT",
+      mode: 'cors',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({ image_url: imgUrl })
+    })
+      .then((res) => res.json())
+      .then((json) => console.log(json))
+    setShowTextField(false)
+  }
+  return (
+    <CardContainer>
+      <ImageWrapper>
+        {!book.image_url && <Image src={require('../Default-cover.png')} />}
+        {book.image_url && <Image src={book.image_url} />}
+        <ImageText onClick={() => setShowTextField(!showTextField)}>Update Image</ImageText>
+      </ImageWrapper>
+      <InfoWrapper>
+        <Link style={{ color: 'black', textDecoration: 'none' }} to={`/books/${book.bookID}`}><BookTitle>{book.title}</BookTitle></Link>
+        <span>by <AuthorButton onClick={() => setKeyword(`&keyword=${author.toLowerCase()}`)}>{author}</AuthorButton></span>
+        <RatingsInfoWrapper>
+          <StarsContainer>
+            <StarsFilling width={(book.average_rating / 5) * 100}>
+              <Stars src={require('../stars.png')} />
+            </StarsFilling>
+          </StarsContainer>
+          <p>{book.average_rating} avg rating from {book.ratings_count} ratings</p>
+          {showTextField && <form onSubmit={(e) => addImage(e)}>
+            <input type="url" placeholder="Add image url" onChange={(e) => setImgUrl(e.target.value)}></input>
+            <button type="submit">Upload</button>
+          </form>}
+        </RatingsInfoWrapper>
 
-            </InfoWrapper>
-        </CardContainer>
-    )
+      </InfoWrapper>
+    </CardContainer>
+  )
 }
