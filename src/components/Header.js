@@ -1,5 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { Button } from '../lib/Button'
 
 const Container = styled.div`
   display: flex;
@@ -9,12 +12,30 @@ const Container = styled.div`
   justify-content: space-between;
   box-sizing: border-box;
   align-items: center;
+  position: fixed;
+  z-index: 10;
 `
 const Title = styled.p`
-  color: burgundy;
   font-size: 30px;
   margin: 0;
+  font-family: 'Playfair Display', serif;
 `
+
+const Form = styled.form`
+  display: flex;
+  font-size: 20px;
+  width: 60%;
+  background-color: white;
+  overflow: hidden;
+`
+const SearchBar = styled.input`
+  width: 100%;
+  border: none;
+  font-size: 20px;
+  line-height: 24px;
+  padding: 5px; 
+`
+
 
 
 export const Header = ({ changeOrder, page, setPage, getAuthors, setAuthor, author }) => {
@@ -22,21 +43,12 @@ export const Header = ({ changeOrder, page, setPage, getAuthors, setAuthor, auth
     return (
         <Container>
             <Title>BARDOLPH'S <br></br> BOOK NOOK</Title>
-            <select onChange={(e) => changeOrder(e.target.value)}>
-                <option value="default">Sort by</option>
-                <option value="highest">Highest rated</option>
-                <option value="lowest">Lowest rated</option>
-                <option value="longest">Longest</option>
-                <option value="shortest">Shortest</option>
-            </select>
-
-            <form onSubmit={(e) => getAuthors(e)}>
-                <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)} />
-            </form>
-            <div>
-                {page > 1 && <button onClick={() => setPage(page - 1)}>Back</button>}
-                <button onClick={() => setPage(page + 1)}>Next Page</button>
-            </div>
+            <Form onSubmit={(e) => getAuthors(e)}>
+                <SearchBar type="text" value={author} onChange={(e) => setAuthor(e.target.value)}
+                    placeholder="Search for an author" />
+                <Button type="submit"><FontAwesomeIcon icon={faSearch} /></Button>
+            </Form>
+            <div></div>
         </Container>
     )
 }
