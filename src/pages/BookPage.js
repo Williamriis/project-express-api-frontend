@@ -112,7 +112,7 @@ export const BookPage = ({ setLocation }) => {
           <div>
             <ImageWrapper>
               {book.image_url && <Image src={book.image_url} />}
-              {!book.image_url && <Image src={require('../Default-cover.png')} />}
+              {!book.image_url && <Image src={require('../blank-cover.jpg')} />}
             </ImageWrapper>
             {!localStorage.getItem(`${book.bookID}`) && <select onChange={(e) => rateBook(e.target.value)}>
               <option value="">My rating</option>

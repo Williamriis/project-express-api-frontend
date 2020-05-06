@@ -109,7 +109,7 @@ export const BookCard = ({ setKeyword, ...book }) => {
   return (
     <CardContainer>
       <ImageWrapper>
-        {!book.image_url && <Image src={require('../Default-cover.png')} />}
+        {!book.image_url && <Image src={require('../blank-cover.jpg')} />}
         {book.image_url && <Image src={book.image_url} />}
         <ImageText onClick={() => setShowTextField(!showTextField)}>Update Image</ImageText>
       </ImageWrapper>
