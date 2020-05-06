@@ -22,6 +22,7 @@ const InfoWrapper = styled.div`
   align-items: flex-start;
   font-family: 'Cormorant Garamond', serif;
   width: 500px;
+  justify-content: space-between;
 `
 
 const Image = styled.img`
@@ -54,7 +55,7 @@ const StarsContainer = styled.div`
 `
 const StarsFilling = styled.div`
   height: 50px;
-  background-color: red;
+  background-color: ${props => props.color};
   width: ${props => props.width}%;
   overflow: hidden;
   display: flex;
@@ -67,11 +68,20 @@ const Stars = styled.img`
   position: absolute;
   z-index: -2;
 `
+
+const PersonalRatingWrapper = styled.div`
+  display: flex;
+  font-family: 'Cormorant Garamond', serif;
+  align-items: center;
+`
 export const BookPage = ({ setLocation }) => {
   const params = useParams()
   const [book, setBook] = useState()
 
   const rateBook = (rating) => {
+    localStorage.setItem(`${book.bookID}`, `${rating}`)
+    let readCount = (+localStorage.getItem('readCount') > 0) ? +localStorage.getItem(`readCount`) : 0
+    localStorage.setItem(`readCount`, parseInt(++readCount))
     fetch(`https://bardolphs-books.herokuapp.com/books/${params.id}`, {
       method: "PUT",
       mode: 'cors',
@@ -104,22 +114,33 @@ export const BookPage = ({ setLocation }) => {
               {book.image_url && <Image src={book.image_url} />}
               {!book.image_url && <Image src={require('../Default-cover.png')} />}
             </ImageWrapper>
-            <select onChange={(e) => rateBook(e.target.value)}>
+            {!localStorage.getItem(`${book.bookID}`) && <select onChange={(e) => rateBook(e.target.value)}>
               <option value="">My rating</option>
               <option value={1.00}>⭐️</option>
               <option value={2.00}>⭐️⭐️</option>
               <option value={3.00}>⭐️⭐️⭐️</option>
               <option value={4.00}>⭐️⭐️⭐️⭐️</option>
               <option value={5.00}>⭐️⭐️⭐️⭐️⭐️</option>
-            </select>
+            </select>}
           </div>
           <InfoWrapper>
-            <Title>{book.title}</Title>
-            <Author>by <Link style={{ color: 'black' }} to={`/authors/${book.authors.split('-')[0].replace(' ', '_')}`}>{book.authors.split('-')[0]}</Link></Author>
-            <p>{book.num_pages} pages</p>
+            <div>
+              <Title>{book.title}</Title>
+              <Author>by <Link style={{ color: 'black' }} to={`/authors/${book.authors.split('-')[0].replace(' ', '_')}`}>{book.authors.split('-')[0]}</Link></Author>
+              <p>{book.num_pages} pages</p>
+              {localStorage.getItem(`${book.bookID}`) &&
+                <PersonalRatingWrapper>
+                  <p>My rating: </p>
+                  <StarsContainer>
+                    <StarsFilling width={(localStorage.getItem(`${book.bookID}`) / 5) * 100} color="gold">
+                      <Stars src={require('../stars.png')} />
+                    </StarsFilling>
+                  </StarsContainer>
+                </PersonalRatingWrapper>}
+            </div>
             <RatingsInfoWrapper>
               <StarsContainer>
-                <StarsFilling width={(book.average_rating / 5) * 100}>
+                <StarsFilling width={(book.average_rating / 5) * 100} color="red">
                   <Stars src={require('../stars.png')} />
                 </StarsFilling>
               </StarsContainer>

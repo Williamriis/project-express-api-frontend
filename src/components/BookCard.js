@@ -114,7 +114,7 @@ export const BookCard = ({ setKeyword, ...book }) => {
         <ImageText onClick={() => setShowTextField(!showTextField)}>Update Image</ImageText>
       </ImageWrapper>
       <InfoWrapper>
-        <Link style={{ color: 'black', textDecoration: 'none' }} to={`/books/${book.bookID}`}><BookTitle>{book.title}</BookTitle></Link>
+        <Link style={{ color: 'black', textDecoration: 'none' }} to={`/books/${book.bookID}`}><BookTitle>{book.title}</BookTitle> </Link>
         <span>by <AuthorButton onClick={() => setKeyword(`&keyword=${author.toLowerCase()}`)}>{author}</AuthorButton></span>
         <RatingsInfoWrapper>
           <StarsContainer>
@@ -122,7 +122,8 @@ export const BookCard = ({ setKeyword, ...book }) => {
               <Stars src={require('../stars.png')} />
             </StarsFilling>
           </StarsContainer>
-          <p>{book.average_rating} avg rating from {book.ratings_count} ratings</p>
+          <p>{book.average_rating} avg rating from {book.ratings_count} ratings  {localStorage.getItem(`${book.bookID}`) &&
+            <span style={{ color: 'red', fontWeight: 'bold' }}>(Read)</span>}</p>
           {showTextField && <form onSubmit={(e) => addImage(e)}>
             <input type="url" placeholder="Add image url" onChange={(e) => setImgUrl(e.target.value)}></input>
             <button type="submit">Upload</button>

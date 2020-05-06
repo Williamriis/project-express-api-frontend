@@ -38,9 +38,14 @@ const SearchBar = styled.input`
   padding: 5px; 
 `
 
+const Readcount = styled.p`
+  font-size: 22px;
+  font-family: 'Cormorant Garamond', serif;
+`
 
 
-export const Header = ({ setKeyword, keyword, setBooks, setPage, location, setLocation }) => {
+
+export const Header = ({ setKeyword, setBooks, setPage, location, setLocation }) => {
   const history = useHistory()
   const [search, setSearch] = useState()
 
@@ -71,7 +76,11 @@ export const Header = ({ setKeyword, keyword, setBooks, setPage, location, setLo
           placeholder="Search for an author" onChange={(e) => setSearch(e.target.value)} value={search} />
         <Button disabled={location !== "/"} type="submit"><FontAwesomeIcon icon={faSearch} /></Button>
       </Form>
-      <div></div>
+      <div>
+        <Readcount>
+          {localStorage.getItem('readCount')} books read
+        </Readcount>
+      </div>
     </Container>
   )
 }
