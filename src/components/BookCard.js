@@ -118,7 +118,7 @@ export const BookCard = ({ setKeyword, ...book }) => {
         <span>by <AuthorButton onClick={() => setKeyword(`&keyword=${author.toLowerCase()}`)}>{author}</AuthorButton></span>
         <RatingsInfoWrapper>
           <StarsContainer>
-            <StarsFilling width={(book.average_rating / 5) * 100}>
+            <StarsFilling width={(book.average_rating / 5) * 96}>
               <Stars src={require('../stars.png')} />
             </StarsFilling>
           </StarsContainer>

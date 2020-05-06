@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
+import { Button } from '../lib/Button'
 import styled from 'styled-components'
 
 const Container = styled.div`
@@ -74,9 +75,16 @@ const PersonalRatingWrapper = styled.div`
   font-family: 'Cormorant Garamond', serif;
   align-items: center;
 `
-export const BookPage = ({ setLocation }) => {
+export const BookPage = ({ setLocation, setKeyword }) => {
   const params = useParams()
+  const history = useHistory()
   const [book, setBook] = useState()
+
+  const searchAuthor = (author) => {
+    setKeyword(`&keyword=${author.toLowerCase()}`)
+    setLocation('/')
+    history.push('/')
+  }
 
   const rateBook = (rating) => {
     localStorage.setItem(`${book.bookID}`, `${rating}`)
@@ -100,7 +108,7 @@ export const BookPage = ({ setLocation }) => {
       .then((res) => res.json())
       .then((json) => {
         setBook(json)
-        setLocation("book")
+        setLocation('book')
       })
   }, [])
   return (
@@ -126,13 +134,16 @@ export const BookPage = ({ setLocation }) => {
           <InfoWrapper>
             <div>
               <Title>{book.title}</Title>
-              <Author>by <Link style={{ color: 'black' }} to={`/authors/${book.authors.split('-')[0].replace(' ', '_')}`}>{book.authors.split('-')[0]}</Link></Author>
+              <Author>by
+                <Button style={{ fontFamily: 'Cormorant Garamond', fontWeight: 'bold' }}
+                  onClick={() => searchAuthor(book.authors.split('-')[0].replace(/ /, '_'))}>{book.authors.split('-')[0]}</Button>
+              </Author>
               <p>{book.num_pages} pages</p>
               {localStorage.getItem(`${book.bookID}`) &&
                 <PersonalRatingWrapper>
                   <p>My rating: </p>
                   <StarsContainer>
-                    <StarsFilling width={(localStorage.getItem(`${book.bookID}`) / 5) * 100} color="gold">
+                    <StarsFilling width={(localStorage.getItem(`${book.bookID}`) / 5) * 96} color="gold">
                       <Stars src={require('../stars.png')} />
                     </StarsFilling>
                   </StarsContainer>
@@ -140,7 +151,7 @@ export const BookPage = ({ setLocation }) => {
             </div>
             <RatingsInfoWrapper>
               <StarsContainer>
-                <StarsFilling width={(book.average_rating / 5) * 100} color="red">
+                <StarsFilling width={(book.average_rating / 5) * 96} color="red">
                   <Stars src={require('../stars.png')} />
                 </StarsFilling>
               </StarsContainer>

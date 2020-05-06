@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { Button } from '../lib/Button'
 
 const Container = styled.div`
@@ -29,6 +29,7 @@ const Form = styled.form`
   width: 60%;
   background-color: white;
   overflow: hidden;
+  align-items: center;
 `
 const SearchBar = styled.input`
   width: 100%;
@@ -73,8 +74,9 @@ export const Header = ({ setKeyword, setBooks, setPage, location, setLocation })
       <Button onClick={() => reset()}><Title>BARDOLPH'S <br></br> BOOK NOOK</Title></Button>
       <Form onSubmit={(e) => handleSubmit(e)}>
         <SearchBar disabled={location !== "/"} type="text"
-          placeholder="Search for an author" onChange={(e) => setSearch(e.target.value)} value={search} />
+          placeholder="Search for an author" onChange={(e) => setSearch(e.target.value.replace(/ /, '_'))} value={search} />
         <Button disabled={location !== "/"} type="submit"><FontAwesomeIcon icon={faSearch} /></Button>
+        <Link to='/addbook' style={{ color: 'black', padding: '5px' }}><FontAwesomeIcon icon={faPlus} /></Link>
       </Form>
       <div>
         <Readcount>

@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { Switch, Route, BrowserRouter } from 'react-router-dom'
 import { HomePage } from './pages/HomePage'
-import { AuthorPage } from './pages/AuthorPage'
 import { BookPage } from './pages/BookPage'
 import { Header } from './components/Header'
-import { NavBar } from './components/NavBar'
+import { AddBook } from 'pages/AddBook'
 
 export const App = () => {
   const [books, setBooks] = useState()
@@ -42,13 +41,13 @@ export const App = () => {
         </Route>
       </Switch>
       <Switch>
-        <Route path="/authors/:author" exact>
-          <AuthorPage setLocation={setLocation} />
+        <Route path="/books/:id" exact>
+          <BookPage setLocation={setLocation} setKeyword={setKeyword} />
         </Route>
       </Switch>
       <Switch>
-        <Route path="/books/:id" exact>
-          <BookPage setLocation={setLocation} />
+        <Route path="/addbook" exact>
+          <AddBook setBooks={setBooks} />
         </Route>
       </Switch>
     </BrowserRouter>
